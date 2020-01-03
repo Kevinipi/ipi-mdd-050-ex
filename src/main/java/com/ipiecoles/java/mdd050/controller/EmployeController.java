@@ -3,10 +3,7 @@ package com.ipiecoles.java.mdd050.controller;
 import com.ipiecoles.java.mdd050.model.Employe;
 import com.ipiecoles.java.mdd050.repository.EmployeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/employes")
@@ -31,6 +28,11 @@ public class EmployeController {
     @RequestMapping(value="/{id}", method = RequestMethod.GET)
     public Employe retrieveEmployes(@PathVariable ("id") Long id) {
         return employeRepository.findById(id).get();
+    }
+    //Méthode GET /employés et renvoi l'employé avec le matricule C00019
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public Employe EmployeByMatricule (@RequestParam("matricule") String matricule){
+        return employeRepository.findByMatricule(matricule);
     }
 
 }
