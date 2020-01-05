@@ -2,8 +2,15 @@ package com.ipiecoles.java.mdd050.controller;
 
 import com.ipiecoles.java.mdd050.model.Employe;
 import com.ipiecoles.java.mdd050.repository.EmployeRepository;
+import com.sun.xml.bind.v2.model.core.ID;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.web.bind.annotation.*;
+
+import java.awt.print.Pageable;
 
 @RestController
 @RequestMapping("/employes")
@@ -29,10 +36,23 @@ public class EmployeController {
     public Employe retrieveEmployes(@PathVariable ("id") Long id) {
         return employeRepository.findById(id).get();
     }
+
     //Méthode GET /employés et renvoi l'employé avec le matricule C00019
-    @RequestMapping(value = "", method = RequestMethod.GET)
+    @RequestMapping(value = "", params = "matricule")
     public Employe EmployeByMatricule (@RequestParam("matricule") String matricule){
         return employeRepository.findByMatricule(matricule);
     }
 
+    //Listes des employés
+    public interface PagingAndSortingRepository extends CrudRepository<Employe, ID> {
+        Iterable<Employe> findAll(Sort sort);
+        Page<Employe> findAll(Pageable pageable);
+    }
+    public Page<Employe> GetListEmploye (@RequestParam("page")Integer page,
+                                   @RequestParam("size") Integer size,
+                                   @RequestParam("sortDirection") String Direction,
+                                   @RequestParam("sortProperty") String SortProperty) {
+        //PageRequest pageRequest = new PageRequest(page, size, Direction,matricule);
+        return (Page<Employe>) employeRepository.findAll(PageRequest.of(page,size, Sort.Direction.fromString(Direction), SortProperty));
+    }
 }
