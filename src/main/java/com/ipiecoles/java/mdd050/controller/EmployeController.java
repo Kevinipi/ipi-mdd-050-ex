@@ -8,11 +8,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.*;
 import java.awt.print.Pageable;
 
 @RestController
@@ -81,5 +80,13 @@ public class EmployeController {
             @PathVariable("id") Long idEmploye,  //Permettera de gérer l'exception de l'id afin d'éviter l'incohérence de données
             @RequestBody Employe employe) {
         return employeRepository.save(employe);
+    }
+    //10/02/2020 : Méthode pour supprimer un employé
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)//Renvoyer le code correspondant au status HTTP et pas le code 200, pas de contenu renvoyé et cela est normal
+    public void deleteEmploye (
+            @PathVariable("id") Long idEmploye) {
+        employeRepository.deleteById(idEmploye);
+        //return ("l'uilitsateur à été supprimer");
     }
 }
