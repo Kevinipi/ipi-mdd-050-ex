@@ -28,6 +28,7 @@ public class TechnicienController {
     @Autowired
     private EmployeRepository employeRepository;
 
+    //10/02/2020 : Ajouter ou supprimer un manager à un technicien
     @RequestMapping(method = RequestMethod.GET, value = "{idTechnicien}/manager/{matriculeManager}/add")
     public Technicien addManagerToTechnicien (
             @PathVariable("idTechnicien") Long idTechnicien,
