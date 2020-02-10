@@ -8,8 +8,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.*;
 import java.awt.print.Pageable;
 
 @RestController
@@ -18,6 +20,7 @@ public class EmployeController {
 
     @Autowired // Un repository existe et j'ai besoin de l'utiliser
     private EmployeRepository employeRepository;
+    //private Object employeService;
 
     @RequestMapping(value = "/count", method = RequestMethod.GET) //concaténation de l'URL d'en haut
     public long countEmployes(){
@@ -38,7 +41,7 @@ public class EmployeController {
     }
 
     //Méthode GET /employés et renvoi l'employé avec le matricule C00019
-    @RequestMapping(value = "", params = "matricule")
+    @RequestMapping(method = RequestMethod.GET, value = "", params = "matricule")
     public Employe EmployeByMatricule (@RequestParam("matricule") String matricule){
         return employeRepository.findByMatricule(matricule);
     }
@@ -55,5 +58,16 @@ public class EmployeController {
                                    @RequestParam("sortProperty") String SortProperty) {
         //PageRequest pageRequest = new PageRequest(page, size, Direction,matricule);
         return (Page<Employe>) employeRepository.findAll(PageRequest.of(page, size, Sort.Direction.fromString(Direction), SortProperty));
+    }
+
+    //10/02/2020 : Création du mapping pour pouvoir créer un nouvel employé en une fois pour les différent postes (Manager, commercial, technicien)
+    @RequestMapping(method = RequestMethod.POST,
+                    consumes = MediaType.APPLICATION_JSON_VALUE, //Format de données reçu (JSON)
+                    produces = MediaType.APPLICATION_JSON_VALUE) // Format de données envoyé (JSON)
+    public Employe createEmploye(
+            @RequestBody Employe employe
+    ){
+        return employeRepository.save(employe);
+        //return employeRepository.findAll(employe); //return employe repository for save New Employe
     }
 }
