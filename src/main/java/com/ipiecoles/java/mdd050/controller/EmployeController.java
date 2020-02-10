@@ -50,10 +50,21 @@ public class EmployeController {
         throw new EntityNotFoundException("L'employé d'identifiant" + id + "n'éxiste pas !");
     }
 
-    //Méthode GET /employés et renvoi l'employé avec le matricule C00019
+    //Méthode GET /employés et renvoi l'employé avec le matricule C00019 + Exceptions
+
+    public static final String REGEX_MATRICULE = "^[MCT][0-9]{5}"; // pas d'espace (sensible à la casse)
+
     @RequestMapping(method = RequestMethod.GET, value = "", params = "matricule")
     public Employe EmployeByMatricule(@RequestParam("matricule") String matricule) {
-        return employeRepository.findByMatricule(matricule);
+
+        if(!matricule.matches(REGEX_MATRICULE)){
+            throw new IllegalArgumentException("Le matricule fourni est incorrect !");
+        }
+        Employe employe = employeRepository.findByMatricule(matricule);
+        if (employe == null){
+            throw new EntityNotFoundException("L'employé d'identifiant" + matricule + "n'éxiste pas !");
+        }
+        return employe;
     }
 
     //Listes des employés
@@ -63,8 +74,8 @@ public class EmployeController {
         Page<Employe> findAll(Pageable pageable);
     }
 
+    /*10/02/2020 : Ajout du requestMapping pour faire le lien avec l'index.html*/
     @RequestMapping(method = RequestMethod.GET)
-    //10/02/2020 : Ajout du requestMapping pour faire le lien avec l'index.html
     public Page<Employe> GetListEmploye(@RequestParam("page") Integer page,
                                         @RequestParam("size") Integer size,
                                         @RequestParam("sortDirection") String Direction,

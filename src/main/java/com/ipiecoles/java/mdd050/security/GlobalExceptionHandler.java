@@ -9,10 +9,21 @@ import javax.persistence.EntityNotFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+/*Error 404 Exception*/
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String handleEntityNotFoundException (
             EntityNotFoundException entityNotFoundException){
      return entityNotFoundException.getMessage();
     }
+
+/* Error 400 Exception*/
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleIllegalArgumentException (
+            IllegalArgumentException illegalArgumentException){
+        return illegalArgumentException.getMessage();
+    }
+
 }
