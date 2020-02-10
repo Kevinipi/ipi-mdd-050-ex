@@ -12,7 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import java.awt.print.Pageable;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/employes")
@@ -38,7 +40,14 @@ public class EmployeController {
 //Rendre dynamique l'affichage des employés
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Employe retrieveEmployes(@PathVariable("id") Long id) {
-        return employeRepository.findById(id).get();
+
+        //10/02/2020 : gestion des exceptions
+
+        Optional <Employe> e = employeRepository.findById(id);
+        if (e.isPresent()){
+            return e.get();
+        }
+        throw new EntityNotFoundException("L'employé d'identifiant" + id + "n'éxiste pas !");
     }
 
     //Méthode GET /employés et renvoi l'employé avec le matricule C00019
