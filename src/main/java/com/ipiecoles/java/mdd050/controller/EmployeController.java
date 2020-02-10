@@ -20,7 +20,7 @@ public class EmployeController {
 
     @Autowired // Un repository existe et j'ai besoin de l'utiliser
     private EmployeRepository employeRepository;
-    //private Object employeService;
+
 
     @RequestMapping(value = "/count", method = RequestMethod.GET) //concaténation de l'URL d'en haut
     public long countEmployes() {
