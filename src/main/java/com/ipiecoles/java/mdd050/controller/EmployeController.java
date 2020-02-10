@@ -57,6 +57,8 @@ public class EmployeController {
     @RequestMapping(method = RequestMethod.GET, value = "", params = "matricule")
     public Employe EmployeByMatricule(@RequestParam("matricule") String matricule) {
 
+        //10/02/2020 : gestion des exceptions
+
         if(!matricule.matches(REGEX_MATRICULE)){
             throw new IllegalArgumentException("Le matricule fourni est incorrect !");
         }
@@ -75,13 +77,21 @@ public class EmployeController {
     }
 
     /*10/02/2020 : Ajout du requestMapping pour faire le lien avec l'index.html*/
+    /*Méthode permettant d'afficher la listes des employés*/
     @RequestMapping(method = RequestMethod.GET)
     public Page<Employe> GetListEmploye(@RequestParam("page") Integer page,
                                         @RequestParam("size") Integer size,
                                         @RequestParam("sortDirection") String Direction,
                                         @RequestParam("sortProperty") String SortProperty) {
-        //PageRequest pageRequest = new PageRequest(page, size, Direction,matricule);
-        return (Page<Employe>) employeRepository.findAll(PageRequest.of(page, size, Sort.Direction.fromString(Direction), SortProperty));
+
+        //10/02/2020 : gestion des exceptions pour le nombre d'éléments par page
+
+        Page<Employe> employes =  employeRepository.findAll(PageRequest.of(page, size, Sort.Direction.fromString(Direction), SortProperty));
+
+        if(size < 1 || size > 50){ //permet que si un attaquant veux faire tomber notre site en augmentant la taille du nombre de page il ne pourra pas
+            throw new IllegalArgumentException("Le nombres d'élements est trop important ! Loupé ");
+        }
+        return employes;
     }
 
     //10/02/2020 : Création du mapping pour pouvoir créer un nouvel employé en une fois pour les différent postes (Manager, commercial, technicien)
