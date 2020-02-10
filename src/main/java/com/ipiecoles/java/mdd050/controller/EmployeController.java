@@ -78,7 +78,7 @@ public class EmployeController {
     //10/02/2020 : Création méthode pour modifié les paramètres d'un employé
     @RequestMapping(method = RequestMethod.PUT, value = "/{id}")
     public Employe modifyEmploye(
-            @PathVariable("id") Long idEmploye,  //Contain id of Employe
+            @PathVariable("id") Long idEmploye,  //Permettera de gérer l'exception de l'id afin d'éviter l'incohérence de données
             @RequestBody Employe employe) {
         return employeRepository.save(employe);
     }
