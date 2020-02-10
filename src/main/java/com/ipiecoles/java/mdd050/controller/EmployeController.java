@@ -48,11 +48,12 @@ public class EmployeController {
         Iterable<Employe> findAll(Sort sort);
         Page<Employe> findAll(Pageable pageable);
     }
+    @RequestMapping(method = RequestMethod.GET) //10/02/2020 : Ajout du requestMapping pour faire le lien avec l'index.html
     public Page<Employe> GetListEmploye (@RequestParam("page")Integer page,
                                    @RequestParam("size") Integer size,
                                    @RequestParam("sortDirection") String Direction,
                                    @RequestParam("sortProperty") String SortProperty) {
         //PageRequest pageRequest = new PageRequest(page, size, Direction,matricule);
-        return (Page<Employe>) employeRepository.findAll(PageRequest.of(page,size, Sort.Direction.fromString(Direction), SortProperty));
+        return (Page<Employe>) employeRepository.findAll(PageRequest.of(page, size, Sort.Direction.fromString(Direction), SortProperty));
     }
 }
