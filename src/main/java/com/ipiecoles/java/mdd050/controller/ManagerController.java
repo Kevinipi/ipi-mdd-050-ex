@@ -1,5 +1,7 @@
 package com.ipiecoles.java.mdd050.controller;
 
+import com.ipiecoles.java.mdd050.model.Employe;
+import com.ipiecoles.java.mdd050.model.Manager;
 import com.ipiecoles.java.mdd050.model.Technicien;
 import com.ipiecoles.java.mdd050.repository.EmployeRepository;
 import com.ipiecoles.java.mdd050.repository.ManagerRepository;
@@ -21,6 +23,10 @@ public class ManagerController {
     @Autowired
     private TechnicienRepository technicienRepository;
 
+    @Autowired
+    private EmployeRepository employeRepository;
+
+
     //10/02/2020 : Méthode pour "supprimer" enlever un technicien l'équipe d'un manager
     @RequestMapping(method = RequestMethod.GET, value = "/{idManager}/equipe/{idTechnicien}/remove")
     @ResponseStatus(HttpStatus.NO_CONTENT)//Renvoyer le code correspondant au status HTTP et pas le code 200, pas de contenu renvoyé et cela est normal
@@ -36,5 +42,26 @@ public class ManagerController {
 
         //On sauvegarde le technicien
         technicienRepository.save(technicien);
+    }
+
+    //10/02/2020 : Méthode pour ajouter un technicien l'équipe d'un manager
+    @RequestMapping(method = RequestMethod.GET, value = "/{idManager}/equipe/{matriculeTech}/add")
+    @ResponseStatus(HttpStatus.NO_CONTENT)//Renvoyer le code correspondant au status HTTP et pas le code 200, pas de contenu renvoyé et cela est normal
+    public Manager addTechncienToEquipe (
+            @PathVariable("idManager") Long idManager,
+            @PathVariable("matriculeTech") String matriculeTech) {
+
+        //Récupérer l'id du manager et l'envoyer à technicien
+        Manager manager = managerRepository.findById(idManager).get();
+
+        //Recupérer le technicien à partir de son id de la class employe
+        Technicien technicien = technicienRepository.findByMatricule(matriculeTech);
+
+        //Affectation d'un manager à un technicien
+        technicien.setManager(manager);
+
+        //On sauvegarde le technicien
+        technicienRepository.save(technicien);
+        return manager;
     }
 }
